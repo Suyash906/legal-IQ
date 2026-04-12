@@ -184,7 +184,7 @@ export default function Home() {
 
   const handleProceed = (hasDocs: boolean) => {
     setChatState("analysing");
-    addUser(hasDocs ? "Documents received — proceed with analysis." : "Skip — proceed without documents.");
+    addUser(hasDocs ? "Proceeding with analysis." : "Skip — proceed without documents.");
     disableInput();
     showTyping(() => {
       runAnalysis();
@@ -401,7 +401,7 @@ function DocUploadWidget({ question, onProceed, fileInputRef }: { question: stri
         )}
         <div className="doc-actions">
           <button className="doc-skip" onClick={() => onProceed(false)}>Skip — proceed without documents</button>
-          <button className="doc-proceed" onClick={() => onProceed(chips.length > 0)}>→ Proceed with analysis</button>
+          <button className="doc-proceed" onClick={() => onProceed(true)}>→ Proceed with analysis</button>
         </div>
       </div>
     </>
