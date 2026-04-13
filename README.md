@@ -176,4 +176,4 @@ Open [http://localhost:3000](http://localhost:3000).
 | AI Reasoning | OpenAI GPT-4o |
 | Knowledge Graph | Neo4j Aura (HTTP Query API v2) |
 | Data Ingestion | Python, pandas, openpyxl |
-| Deployment | Vercel (frontend) |
+| Deployment | Vercel (frontend) |.
