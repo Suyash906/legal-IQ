@@ -22,270 +22,204 @@ const STATUS_STYLE: AnyObj = {
 };
 
 const SCENARIOS: AnyObj = {
-  vehicle:  { label: "🚗 Vehicle & Parking Data", question: "Can a parking app store vehicle registration marks (VRM/VIN) for driver identification and repeat-customer targeting under GDPR and CCPA?" },
-  hiring:   { label: "💼 AI Hiring Tools",        question: "Does deploying an AI-based CV screening tool for shortlisting candidates constitute automated decision-making under GDPR Art. 22, requiring explicit consent?" },
-  location: { label: "📍 Location Tracking",      question: "Is continuous background location tracking of delivery drivers lawful under GDPR Art. 6 legitimate interests, or does it require explicit consent?" },
-  health:   { label: "🏥 Health Records",          question: "Can a fitness app share anonymised health metrics with insurers without patient consent under HIPAA and GDPR special category data rules?" },
-  biometric:{ label: "🔐 Biometric Data",          question: "Does facial recognition in retail stores for loss prevention constitute processing of biometric data under GDPR Art. 9, requiring explicit consent?" },
-  ads:      { label: "📢 Targeted Advertising",    question: "Is behavioural advertising based on browsing history lawful under ePrivacy Directive Art. 5(3) without affirmative consent to non-essential cookies?" },
+  vehicle:  { label: "🚗 Vehicle & Parking Data",  question: "Can a parking app store vehicle registration marks (VRM/VIN) for driver identification and repeat-customer targeting under GDPR and CCPA?" },
+  hiring:   { label: "💼 AI Hiring Tools",          question: "Does deploying an AI-based CV screening tool for shortlisting candidates constitute automated decision-making under GDPR Art. 22, requiring explicit consent?" },
+  location: { label: "📍 Location Tracking",        question: "Is continuous background location tracking of delivery drivers lawful under GDPR Art. 6 legitimate interests, or does it require explicit consent?" },
+  health:   { label: "🏥 Health Records",            question: "Can a fitness app share anonymised health metrics with insurers without patient consent under HIPAA and GDPR special category data rules?" },
+  biometric:{ label: "🔐 Biometric Data",            question: "Does facial recognition in retail stores for loss prevention constitute processing of biometric data under GDPR Art. 9, requiring explicit consent?" },
+  ads:      { label: "📢 Targeted Advertising",      question: "Is behavioural advertising based on browsing history lawful under ePrivacy Directive Art. 5(3) without affirmative consent to non-essential cookies?" },
 };
-
-const SUGGEST_CHIPS = [
-  { label: "What does Breyer mean?",    q: "What does Breyer v Germany mean for this case?" },
-  { label: "US-only analysis",          q: "What if we only operate in the US?" },
-  { label: "GDPR fines?",              q: "What are the potential GDPR fines?" },
-  { label: "Legitimate interests?",     q: "Can we use legitimate interests instead of consent?" },
-  { label: "Pseudonymisation?",         q: "What is pseudonymisation under GDPR?" },
-];
 
 const QA = [
   {
     pats: ["breyer", "c-582", "identification", "third party", "dvla"],
-    r: `<p><strong>Breyer v Germany (ECJ C-582/14)</strong> established that data constitutes personal data if the controller has <em>legal means reasonably likely to be used</em> to identify the natural person — even if they don't hold identifying information directly.</p>
-        <p>Applied here: VRM is linked to a named keeper in the DVLA register. Any party (including the parking operator via DVLA, ANPR systems, or third-party enrichment services) can link a VRM to a person. The EU Regulator (A2) argued — and the panel upheld — that this is sufficient for GDPR personal data classification under Recital 30.</p>
-        <p>The Engineer's counter-argument (Art. 4(5) pseudonymisation) was not sustained because pseudonymisation requires the re-identification pathway to be practically unavailable, which DVLA access removes.</p>
-        <div class="qa-cite">Authority: ECJ Case C-582/14 (Breyer v Germany, 2016) · GDPR Recital 30 · Art. 4(5)</div>`,
+    r: `<p><strong>Breyer v Germany (ECJ C-582/14)</strong> established that data constitutes personal data if the controller has <em>legal means reasonably likely to be used</em> to identify the natural person — even if they don't hold identifying information directly.</p><p>Applied here: VRM is linked to a named keeper in the DVLA register. Any party can link a VRM to a person. The EU Regulator argued — and the panel upheld — that this is sufficient for GDPR personal data classification under Recital 30.</p><div class="qa-cite">Authority: ECJ Case C-582/14 (Breyer v Germany, 2016) · GDPR Recital 30 · Art. 4(5)</div>`,
   },
   {
     pats: ["us only", "united states", "america", "ccpa only", "ftc only", "no eu"],
-    r: `<p>If operations are exclusively US-based with no EU data subjects, GDPR does not apply. The analysis simplifies considerably: <strong>CCPA</strong> and <strong>FTC Act § 5</strong> govern.</p>
-        <p>Under CCPA: VRM is personal information if reasonably linkable to a consumer. Storage is permitted with adequate privacy notice and opt-out rights. No affirmative consent required — but you must honour deletion and opt-out requests within 45 days.</p>
-        <p>Under FTC Act § 5: The primary risk is deceptive data practices — if your privacy policy does not disclose VRM retention for targeting, collection without disclosure would be an unfair or deceptive act.</p>
-        <p>Recommended US-only implementation: plain-language privacy notice at point of VRM capture; opt-out mechanism; no VRM sale to third parties without explicit disclosure.</p>
-        <div class="qa-cite">Authority: CCPA § 1798.140 · FTC Act § 5 · FTC Privacy Framework 2012</div>`,
+    r: `<p>If operations are exclusively US-based with no EU data subjects, GDPR does not apply. Under <strong>CCPA</strong>: VRM is personal information if reasonably linkable. Storage is permitted with adequate privacy notice and opt-out rights. Under <strong>FTC Act § 5</strong>: primary risk is deceptive data practices — disclose VRM retention in your privacy policy.</p><div class="qa-cite">Authority: CCPA § 1798.140 · FTC Act § 5 · FTC Privacy Framework 2012</div>`,
   },
   {
-    pats: ["fine", "penalty", "sanction", "enforcement", "ico", "supervisory"],
-    r: `<p>GDPR provides a tiered fine structure. For violations of core principles (Art. 5) or lawful basis requirements (Art. 6): up to <strong>€20 million or 4% of global annual turnover</strong>, whichever is higher.</p>
-        <p>For lesser infringements (Art. 13/14 transparency): up to €10 million or 2% of turnover. UK GDPR mirrors these figures under the DPA 2018, with ICO enforcement powers.</p>
-        <p>Practical exposure: the ICO has issued fines from £50k to £35 million in recent enforcement actions. The panel's recommendation (consent-first + pseudonymised tokens) materially reduces exposure — a documented lawful basis and technical safeguards are strong mitigating factors.</p>
-        <div class="qa-cite">Authority: GDPR Art. 83 · UK GDPR s.157 DPA 2018 · ICO Regulatory Action Policy</div>`,
+    pats: ["fine", "penalty", "sanction", "enforcement", "ico"],
+    r: `<p>GDPR tier-two fines for Art. 5/6 violations: up to <strong>€20 million or 4% of global annual turnover</strong>, whichever is higher. UK GDPR mirrors this under DPA 2018. The panel's consent-first recommendation with documented lawful basis are strong mitigating factors in any ICO investigation.</p><div class="qa-cite">Authority: GDPR Art. 83 · UK GDPR s.157 DPA 2018</div>`,
   },
   {
     pats: ["pseudonymis", "sha", "hash", "token", "anonymis"],
-    r: `<p>The Engineer's submission uses pseudonymisation as a <em>risk reduction</em> argument — not as a basis to escape GDPR entirely. SHA-256 hashing of VRM tokens, with per-user salts and controlled access to the salt store, constitutes a technically robust pseudonymisation measure.</p>
-        <p>The panel adopted this architecture as a core technical recommendation alongside the consent-first lawful basis — the two work in combination: consent is the <em>legal</em> basis, pseudonymisation is the <em>technical</em> safeguard that reduces exposure in the event of a breach or challenge.</p>
-        <div class="qa-cite">Authority: GDPR Art. 4(5) · ICO Anonymisation Code of Practice 2012 · ENISA Pseudonymisation Guidelines 2019</div>`,
+    r: `<p>SHA-256 hashing of VRM tokens with per-user salts constitutes technically robust pseudonymisation. The panel adopted this as the core technical safeguard — working <em>alongside</em> the consent-first lawful basis, not replacing it. Consent is the legal basis; pseudonymisation reduces breach exposure.</p><div class="qa-cite">Authority: GDPR Art. 4(5) · ICO Anonymisation Code 2012 · ENISA Pseudonymisation Guidelines 2019</div>`,
   },
   {
-    pats: ["consent", "opt-in", "art. 7", "article 7", "freely given", "affirmative"],
-    r: `<p><strong>GDPR Art. 7</strong> sets four cumulative conditions for valid consent: (1) <em>freely given</em>; (2) <em>specific</em> — to the stated purpose of VRM capture; (3) <em>informed</em>; and (4) <em>unambiguous</em> — requiring affirmative action, not pre-ticked boxes or silence.</p>
-        <p>The Product Counsel's submission — RESTORED following the US Counsel's legal authority challenge — argues that a one-tap consent UX meeting these conditions is achievable at a 74% opt-in rate.</p>
-        <p>Practical requirements: consent must be as easy to withdraw as to give (Art. 7(3)); records of consent must be retained (Art. 7(1)); consent cannot be bundled with T&Cs.</p>
-        <div class="qa-cite">Authority: GDPR Art. 7 · WP29 Guidelines on Consent (WP259 rev.01) · EDPB Guidelines 05/2020</div>`,
+    pats: ["consent", "opt-in", "art. 7", "article 7", "freely given"],
+    r: `<p><strong>GDPR Art. 7</strong> requires consent to be: freely given, specific, informed, and unambiguous. No pre-ticked boxes. No bundling with T&Cs. Must be as easy to withdraw as to give (Art. 7(3)). The Product Counsel's one-tap consent UX achieving 74% opt-in was the basis for the Nash equilibrium recommendation.</p><div class="qa-cite">Authority: GDPR Art. 7 · EDPB Guidelines 05/2020 on Consent</div>`,
   },
 ];
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+type AppPhase = "input" | "analysing" | "report";
+type ChatState = "greeting" | "doc-upload" | "follow-up";
 
-type ChatState = "greeting" | "doc-upload" | "analysing" | "follow-up";
-
-interface Message {
-  id: number;
-  role: "lq" | "user";
-  content: React.ReactNode;
-}
-
+interface Message { id: number; role: "lq" | "user"; content: React.ReactNode; }
 let msgId = 0;
 const nextId = () => ++msgId;
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Main Component ─────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [phase, setPhase] = useState<AppPhase>("input");
   const [chatState, setChatState] = useState<ChatState>("greeting");
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [inputDisabled, setInputDisabled] = useState(true);
   const [inputPlaceholder, setInputPlaceholder] = useState("What legal question would you like to analyse?");
   const [suggestVisible, setSuggestVisible] = useState(false);
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<AnyObj | null>(null);
+  const [activeTab, setActiveTab] = useState<"ruling" | "exchange" | "strategy" | "steps">("ruling");
   const [openSteps, setOpenSteps] = useState<Set<number>>(new Set());
-  const [selectedBriefAgent, setSelectedBriefAgent] = useState<string | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [debateVisible, setDebateVisible] = useState(false);
+  const [visibleExchanges, setVisibleExchanges] = useState(0);
 
   const messagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const reportRef = useRef<HTMLDivElement>(null);
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // ── Chat helpers ────────────────────────────────────────────────────────────
 
-  const scrollBottom = () => {
-    setTimeout(() => {
-      messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight, behavior: "smooth" });
-    }, 50);
-  };
+  const scrollBottom = () => setTimeout(() => messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight, behavior: "smooth" }), 50);
 
   const addMsg = (role: "lq" | "user", content: React.ReactNode) => {
-    const msg: Message = { id: nextId(), role, content };
-    setMessages((prev) => [...prev, msg]);
+    const msg = { id: nextId(), role, content };
+    setMessages((p) => [...p, msg]);
     scrollBottom();
     return msg.id;
   };
-
-  const addLQ = (content: React.ReactNode) => addMsg("lq", content);
-  const addUser = (text: string) => addMsg("user", <span>{text}</span>);
+  const addLQ   = (c: React.ReactNode) => addMsg("lq", c);
+  const addUser = (t: string) => addMsg("user", <span>{t}</span>);
 
   const showTyping = (cb: () => void, delay = 900) => {
-    const id = addLQ(
-      <div className="typing-dots"><span /><span /><span /></div>
-    );
-    setTimeout(() => {
-      setMessages((prev) => prev.filter((m) => m.id !== id));
-      cb();
-    }, delay);
+    const id = addLQ(<div className="typing-dots"><span /><span /><span /></div>);
+    setTimeout(() => { setMessages((p) => p.filter((m) => m.id !== id)); cb(); }, delay);
   };
 
-  const enableInput = (placeholder: string) => {
-    setInputPlaceholder(placeholder);
-    setInputDisabled(false);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  };
-
+  const enableInput  = (p: string) => { setInputPlaceholder(p); setInputDisabled(false); setTimeout(() => inputRef.current?.focus(), 50); };
   const disableInput = () => setInputDisabled(true);
 
-  // ── Init: greeting ─────────────────────────────────────────────────────────
+  // ── Init ────────────────────────────────────────────────────────────────────
 
   useEffect(() => {
     showTyping(() => {
       addLQ(
         <>
           <p>Welcome to <strong>LegaliQ</strong>. What legal or regulatory question would you like the panel to examine?</p>
-          <p>You can type your question below, or select a scenario to get started:</p>
+          <p>Select a scenario or type your question below:</p>
           <div className="sc-grid">
-            {Object.entries(SCENARIOS).map(([key, s]) => (
-              <span key={key} className="sc-chip" onClick={() => selectScenario(s.question)}>
-                {s.label}
-              </span>
+            {Object.entries(SCENARIOS).map(([k, s]) => (
+              <span key={k} className="sc-chip" onClick={() => selectScenario(s.question)}>{s.label}</span>
             ))}
           </div>
         </>
       );
-      setChatState("greeting");
       enableInput("What legal question would you like to analyse?");
     }, 700);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Flow ───────────────────────────────────────────────────────────────────
+  // ── Input flow ──────────────────────────────────────────────────────────────
 
-  const selectScenario = (q: string) => {
-    addUser(q);
-    handleQuestion(q);
-  };
+  const selectScenario = (q: string) => { addUser(q); handleQuestion(q); };
 
   const handleQuestion = (q: string) => {
     setChatState("doc-upload");
     setQuestion(q);
     disableInput();
     showTyping(() => {
-      addLQ(<DocUploadWidget question={q} onProceed={handleProceed} fileInputRef={fileInputRef} />);
+      addLQ(<DocUploadWidget question={q} onProceed={handleProceed} />);
     }, 900);
   };
 
-  const handleProceed = (hasDocs: boolean) => {
-    setChatState("analysing");
-    addUser(hasDocs ? "Proceeding with analysis." : "Skip — proceed without documents.");
+  const handleProceed = (skipped: boolean) => {
+    addUser(skipped ? "Skip — proceed without documents." : "Proceeding with analysis.");
     disableInput();
+    setPhase("analysing");
     showTyping(() => {
-      runAnalysis();
+      addLQ(<p>Convening the panel… this takes 30–60 seconds.</p>);
+      runAnalysis(question);
     }, 700);
   };
 
-  const runAnalysis = async () => {
-    // Placeholder message that we will fill progressively
-    const blockId = nextId();
-    setMessages((prev) => [
-      ...prev,
-      { id: blockId, role: "lq", content: <AnalysisBlock key={blockId} question={question} agentMeta={AGENT_META} onDone={onAnalysisDone} /> },
-    ]);
-    scrollBottom();
+  const runAnalysis = async (q: string) => {
+    try {
+      const res = await fetch("/api/reason", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, contexts: {} }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setResult(data);
+      setPhase("report");
+      setChatState("follow-up");
+      setActiveTab("ruling");
+      setTimeout(() => {
+        reportRef.current?.scrollIntoView({ behavior: "smooth" });
+        showTyping(() => {
+          addLQ(<p>The panel has reached a <strong>Nash equilibrium</strong>. The full report is below — scroll down or use the tabs to navigate. Ask any follow-up question here.</p>);
+          setSuggestVisible(true);
+          enableInput("Ask a follow-up question about the analysis…");
+        }, 600);
+      }, 300);
+    } catch (e) {
+      setPhase("input");
+      addLQ(<p style={{ color: "#dc2626" }}><strong>Error:</strong> {e instanceof Error ? e.message : "Unexpected error"}</p>);
+      enableInput("What legal question would you like to analyse?");
+    }
   };
 
-  const onAnalysisDone = (res: AnyObj) => {
-    setResult(res);
-    setChatState("follow-up");
-    showTyping(() => {
-      addLQ(
-        <p>Analysis complete. The panel has reached a <strong>Nash equilibrium</strong> — no counsel can improve their position by deviating. Ask me any follow-up question about the analysis.</p>
-      );
-      setSuggestVisible(true);
-      enableInput("Ask a follow-up question about the analysis…");
-    }, 800);
-  };
-
-  // ── Input handling ─────────────────────────────────────────────────────────
+  // ── Keyboard & send ─────────────────────────────────────────────────────────
 
   const handleSend = () => {
-    const text = inputText.trim();
-    if (!text) return;
+    const t = inputText.trim();
+    if (!t) return;
     setInputText("");
-    if (chatState === "greeting") {
-      addUser(text);
-      handleQuestion(text);
-    } else if (chatState === "follow-up") {
-      addUser(text);
-      handleFollowUp(text, result);
-    }
+    if (chatState === "greeting") { addUser(t); handleQuestion(t); }
+    else if (chatState === "follow-up") { addUser(t); handleFollowUp(t); }
   };
 
-  const handleFollowUp = (q: string, res: AnyObj | null) => {
+  const handleFollowUp = (q: string) => {
     disableInput();
     const lower = q.toLowerCase();
-    let response: React.ReactNode = null;
-
+    let resp: React.ReactNode = null;
     for (const pair of QA) {
-      if (pair.pats.some((p) => lower.includes(p))) {
-        response = <div dangerouslySetInnerHTML={{ __html: pair.r }} />;
-        break;
-      }
+      if (pair.pats.some((p) => lower.includes(p))) { resp = <div dangerouslySetInnerHTML={{ __html: pair.r }} />; break; }
     }
-
-    if (!response) {
-      if (lower.includes("step") || lower.includes("implement") || lower.includes("action")) {
-        response = (
-          <>
-            <p>The panel's recommended roadmap runs across four phases. Critical immediate actions:</p>
-            <p><strong>Week 1–2 (Legal):</strong> Complete the ICO LIA template and determine DPO obligation.</p>
-            <p><strong>Week 2–6 (Engineering):</strong> SHA-256 hashed token architecture with per-user salts and 90-day TTL.</p>
-            <p><strong>Week 4–6 (Product):</strong> One-tap consent UX — target ≥74% opt-in rate.</p>
-            <p><strong>Week 7–10 (Launch):</strong> Staged rollout with consent monitoring and a 6-month ICO audit scheduled from day one.</p>
-          </>
-        );
-      } else if (res?.decision) {
-        response = (
-          <>
-            <p><strong>Panel ruling:</strong> {res.decision.recommendation}</p>
-            <p>Feel free to ask a more specific question about any jurisdiction, agent, or implementation detail.</p>
-          </>
-        );
-      } else {
-        response = (
-          <p>That touches on aspects the panel hasn't specifically addressed. Ask about a specific jurisdiction, agent, legal authority, or implementation step and I'll draw from the panel record.</p>
-        );
-      }
-    }
-
-    showTyping(() => {
-      addLQ(response);
-      enableInput("Ask a follow-up question…");
-    }, 900);
+    if (!resp) resp = <p>Based on the panel record: the EU Regulator's position (UPHELD) is that a consent-first architecture with pseudonymised tokens is the most defensible implementation. Ask about a specific jurisdiction, agent, or authority for a more targeted answer.</p>;
+    showTyping(() => { addLQ(resp); enableInput("Ask a follow-up question…"); }, 900);
   };
-
-  // ── Keyboard & resize ──────────────────────────────────────────────────────
 
   const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
+  const resize = (el: HTMLTextAreaElement) => { el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 100) + "px"; };
 
-  const resize = (el: HTMLTextAreaElement) => {
-    el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 100) + "px";
-  };
+  const agentMeta = result?.agentMeta ?? AGENT_META;
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Debate animation trigger ─────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (activeTab !== "exchange" || !result) return;
+    if (debateVisible) return;
+    setDebateVisible(true);
+    setVisibleExchanges(0);
+    const exchanges = result.exchanges ?? [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    exchanges.forEach((_: AnyObj, i: number) => {
+      timers.push(setTimeout(() => setVisibleExchanges(i + 1), 400 + i * 1600));
+    });
+    return () => timers.forEach(clearTimeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, result]);
+
+  // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
     <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", fontFamily: "Inter, system-ui, sans-serif" }}>
@@ -299,53 +233,97 @@ export default function Home() {
             <div style={{ fontSize: 10, color: "#9ca3af", fontWeight: 500, letterSpacing: ".5px", textTransform: "uppercase" }}>Multi-Agent Legal Reasoning</div>
           </div>
         </div>
-        <span style={{ background: "#EEF0FF", color: "#3d5afe", fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 20 }}>⚖️ Adversarial Analysis Mode</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {phase === "report" && result && (
+            <button onClick={() => window.print()} style={{ background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 600, color: "#374151", cursor: "pointer" }}>
+              ↓ Export PDF
+            </button>
+          )}
+          <span style={{ background: "#EEF0FF", color: "#3d5afe", fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 20 }}>⚖️ Adversarial Analysis Mode</span>
+        </div>
       </header>
 
-      {/* CHAT OUTER */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", maxWidth: 860, width: "100%", margin: "0 auto", overflow: "hidden", padding: "0 16px" }}>
+      {/* BODY — split pane when report is visible */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-        {/* Messages */}
-        <div className="chat-messages" ref={messagesRef} style={{ flex: 1, overflowY: "auto", padding: "24px 0 12px", display: "flex", flexDirection: "column", gap: 18 }}>
-          {messages.map((m) => (
-            <div key={m.id} className={`msg ${m.role === "lq" ? "msg-lq" : "msg-user"}`}>
-              {m.role === "lq" && <div className="msg-av">LQ</div>}
-              <div className="msg-bubble">{m.content}</div>
+        {/* LEFT: Chat */}
+        <div style={{
+          width: phase === "report" ? 340 : "100%",
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          borderRight: phase === "report" ? "1px solid #e5e7eb" : "none",
+          transition: "width .4s ease",
+          background: "#F4F5F8",
+          overflow: "hidden",
+        }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", maxWidth: phase === "report" ? "100%" : 860, width: "100%", margin: "0 auto", padding: "0 16px", overflow: "hidden" }}>
+
+            {/* Messages */}
+            <div className="chat-messages" ref={messagesRef} style={{ flex: 1, overflowY: "auto", padding: "20px 0 10px", display: "flex", flexDirection: "column", gap: 16 }}>
+              {messages.map((m) => (
+                <div key={m.id} className={`msg ${m.role === "lq" ? "msg-lq" : "msg-user"}`}>
+                  {m.role === "lq" && <div className="msg-av">LQ</div>}
+                  <div className="msg-bubble">{m.content}</div>
+                </div>
+              ))}
+              {phase === "analysing" && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 0" }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg,#1a1a2e,#3d5afe)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 800, flexShrink: 0 }}>LQ</div>
+                  <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "4px 12px 12px 12px", padding: "13px 16px", boxShadow: "0 1px 3px rgba(0,0,0,.05)" }}>
+                    <div className="typing-dots"><span /><span /><span /></div>
+                  </div>
+                </div>
+              )}
             </div>
-          ))}
+
+            {/* Suggest chips */}
+            {suggestVisible && (
+              <div className="suggest-bar" style={{ display: "flex" }}>
+                {[
+                  { label: "What does Breyer mean?", q: "What does Breyer v Germany mean for this case?" },
+                  { label: "GDPR fines?", q: "What are the potential GDPR fines?" },
+                  { label: "Legitimate interests?", q: "Can we use legitimate interests instead of consent?" },
+                  { label: "Pseudonymisation?", q: "What is pseudonymisation under GDPR?" },
+                ].map((c) => (
+                  <span key={c.q} className="suggest-chip" onClick={() => { addUser(c.q); handleFollowUp(c.q); }}>{c.label}</span>
+                ))}
+              </div>
+            )}
+
+            {/* Input */}
+            <div className="input-area">
+              <div className="input-wrap">
+                <textarea ref={inputRef} className="chat-input" rows={1} placeholder={inputPlaceholder}
+                  disabled={inputDisabled} value={inputText}
+                  onChange={(e) => { setInputText(e.target.value); resize(e.target); }}
+                  onKeyDown={onKey} />
+                <button className="send-btn" disabled={inputDisabled} onClick={handleSend}>→</button>
+              </div>
+              <div className="input-hint">Press Enter to send · Shift+Enter for new line</div>
+            </div>
+          </div>
         </div>
 
-        {/* Suggest chips */}
-        {suggestVisible && (
-          <div className="suggest-bar" style={{ display: "flex" }}>
-            {SUGGEST_CHIPS.map((c) => (
-              <span key={c.q} className="suggest-chip" onClick={() => { addUser(c.q); handleFollowUp(c.q, result); }}>
-                {c.label}
-              </span>
-            ))}
+        {/* RIGHT: Structured Report */}
+        {phase === "report" && result && (
+          <div ref={reportRef} style={{ flex: 1, overflowY: "auto", background: "#F4F5F8" }}>
+            <ReportView
+              result={result}
+              agentMeta={agentMeta}
+              activeTab={activeTab}
+              onTabChange={(t) => setActiveTab(t)}
+              openSteps={openSteps}
+              onToggleStep={(i) => setOpenSteps((p) => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n; })}
+              selectedAgent={selectedAgent}
+              onSelectAgent={setSelectedAgent}
+              visibleExchanges={visibleExchanges}
+              debateVisible={debateVisible}
+            />
           </div>
         )}
-
-        {/* Input */}
-        <div className="input-area">
-          <div className="input-wrap">
-            <textarea
-              ref={inputRef}
-              className="chat-input"
-              rows={1}
-              placeholder={inputPlaceholder}
-              disabled={inputDisabled}
-              value={inputText}
-              onChange={(e) => { setInputText(e.target.value); resize(e.target); }}
-              onKeyDown={onKey}
-            />
-            <button className="send-btn" disabled={inputDisabled} onClick={handleSend}>→</button>
-          </div>
-          <div className="input-hint">Press Enter to send · Shift+Enter for new line</div>
-        </div>
       </div>
 
-      {/* Hidden file input */}
       <input ref={fileInputRef} type="file" style={{ display: "none" }} accept=".pdf,.docx,.txt,.md,.csv" multiple />
     </div>
   );
@@ -353,40 +331,31 @@ export default function Home() {
 
 // ── Doc upload widget ──────────────────────────────────────────────────────────
 
-function DocUploadWidget({ question, onProceed, fileInputRef }: { question: string; onProceed: (hasDocs: boolean) => void; fileInputRef: React.RefObject<HTMLInputElement | null> }) {
+function DocUploadWidget({ question, onProceed }: { question: string; onProceed: (skipped: boolean) => void }) {
   const [chips, setChips] = useState<{ label: string; type: "file" | "link" }[]>([]);
   const [linkVal, setLinkVal] = useState("");
 
   const addLink = () => {
-    const url = linkVal.trim();
-    if (!url) return;
-    const label = url.replace(/^https?:\/\//, "").substring(0, 45);
-    setChips((p) => [...p, { label: `🔗 ${label}`, type: "link" }]);
+    const url = linkVal.trim(); if (!url) return;
+    setChips((p) => [...p, { label: `🔗 ${url.replace(/^https?:\/\//, "").substring(0, 45)}`, type: "link" }]);
     setLinkVal("");
-  };
-
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    setChips((p) => [...p, ...files.map((f) => ({ label: `📄 ${f.name}`, type: "file" as const }))]);
-    e.target.value = "";
   };
 
   return (
     <>
       <p>Understood. The panel will examine:</p>
       <p><em>"{question}"</em></p>
-      <p>Would you like to add supporting documents or links to inform the panel?</p>
+      <p>Add supporting documents or links, or proceed directly.</p>
       <div className="doc-widget">
-        <div className="doc-upload-zone" onClick={() => fileInputRef.current?.click()}>
+        <div className="doc-upload-zone" onClick={() => document.getElementById("lq-file-input")?.click()}>
           <span style={{ fontSize: 18 }}>📎</span>
-          <div>
-            <strong>Attach documents</strong><br />
-            <span style={{ fontSize: 10, color: "#9ca3af" }}>PDF, DOCX, TXT, MD — content used as agent context</span>
-          </div>
-          <input type="file" style={{ display: "none" }} accept=".pdf,.docx,.txt,.md,.csv" multiple onChange={handleFiles} />
+          <div><strong>Attach documents</strong><br /><span style={{ fontSize: 10, color: "#9ca3af" }}>PDF, DOCX, TXT, MD</span></div>
+          <input id="lq-file-input" type="file" style={{ display: "none" }} accept=".pdf,.docx,.txt,.md,.csv" multiple
+            onChange={(e) => { setChips((p) => [...p, ...Array.from(e.target.files ?? []).map((f) => ({ label: `📄 ${f.name}`, type: "file" as const }))]); e.target.value = ""; }} />
         </div>
         <div className="doc-link-row">
-          <input className="doc-url-input" type="url" placeholder="Or paste a reference link (https://…)" value={linkVal} onChange={(e) => setLinkVal(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addLink()} />
+          <input className="doc-url-input" type="url" placeholder="Or paste a reference link…" value={linkVal}
+            onChange={(e) => setLinkVal(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addLink()} />
           <button className="doc-url-add" onClick={addLink}>Add</button>
         </div>
         {chips.length > 0 && (
@@ -400,298 +369,293 @@ function DocUploadWidget({ question, onProceed, fileInputRef }: { question: stri
           </div>
         )}
         <div className="doc-actions">
-          <button className="doc-skip" onClick={() => onProceed(false)}>Skip — proceed without documents</button>
-          <button className="doc-proceed" onClick={() => onProceed(true)}>→ Proceed with analysis</button>
+          <button className="doc-skip" onClick={() => onProceed(true)}>Skip — proceed without documents</button>
+          <button className="doc-proceed" onClick={() => onProceed(false)}>→ Proceed with analysis</button>
         </div>
       </div>
     </>
   );
 }
 
-// ── Analysis block ─────────────────────────────────────────────────────────────
+// ── Report View ────────────────────────────────────────────────────────────────
 
-function AnalysisBlock({ question, agentMeta, onDone }: { question: string; agentMeta: AnyObj; onDone: (res: AnyObj) => void }) {
-  const [exchanges, setExchanges] = useState<AnyObj[]>([]);
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [result, setResult] = useState<AnyObj | null>(null);
-  const [showConclusion, setShowConclusion] = useState(false);
-  const [showStrategy, setShowStrategy] = useState(false);
-  const [showSteps, setShowSteps] = useState(false);
-  const [showGraph, setShowGraph] = useState(false);
-  const [openSteps, setOpenSteps] = useState<Set<number>>(new Set());
-  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+const TABS = [
+  { id: "ruling",   label: "Panel Ruling"   },
+  { id: "exchange", label: "Debate Record"  },
+  { id: "strategy", label: "Strategy"       },
+  { id: "steps",    label: "Roadmap"        },
+] as const;
 
-  useEffect(() => {
-    fetch("/api/reason", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, contexts: {} }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.error) throw new Error(data.error);
-        setResult(data);
-        setExchanges(data.exchanges ?? []);
-      })
-      .catch((e) => setError(e.message));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Animate exchanges in sequentially
-  useEffect(() => {
-    if (!exchanges.length) return;
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    exchanges.forEach((_, i) => {
-      const t = setTimeout(() => {
-        setVisibleCount(i + 1);
-        if (i === exchanges.length - 1) {
-          timers.push(setTimeout(() => setShowConclusion(true), 1000));
-        }
-      }, 400 + i * 1950);
-      timers.push(t);
-    });
-    return () => timers.forEach(clearTimeout);
-  }, [exchanges]);
-
-  useEffect(() => { if (showConclusion) setTimeout(() => setShowStrategy(true), 400); }, [showConclusion]);
-  useEffect(() => { if (showStrategy) setTimeout(() => setShowSteps(true), 400); }, [showStrategy]);
-  useEffect(() => { if (showSteps) setTimeout(() => setShowGraph(true), 400); }, [showSteps]);
-  useEffect(() => { if (showGraph && result) setTimeout(() => onDone(result), 600); }, [showGraph, result]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const toggleStep = (i: number) =>
-    setOpenSteps((prev) => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; });
-
-  const meta = (id: string) => (result?.agentMeta ?? agentMeta)[id] ?? { name: id, color: "#6b7280", bg: "#f9fafb" };
-
-  if (error) return <p style={{ color: "#dc2626" }}><strong>Error:</strong> {error}</p>;
+function ReportView({ result, agentMeta, activeTab, onTabChange, openSteps, onToggleStep, selectedAgent, onSelectAgent, visibleExchanges, debateVisible }: {
+  result: AnyObj; agentMeta: AnyObj;
+  activeTab: string; onTabChange: (t: "ruling" | "exchange" | "strategy" | "steps") => void;
+  openSteps: Set<number>; onToggleStep: (i: number) => void;
+  selectedAgent: string | null; onSelectAgent: (id: string) => void;
+  visibleExchanges: number; debateVisible: boolean;
+}) {
+  const meta = (id: string) => agentMeta[id] ?? { name: id, color: "#6b7280", bg: "#f9fafb", jur: "" };
 
   return (
-    <div className="analysis-block">
+    <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 24px 48px" }}>
 
-      {/* 1. Chambers Exchange */}
-      <div className="analysis-section-lbl">Chambers Exchange — Adversarial Submissions</div>
-      <div className="debate-track">
-        {exchanges.map((ex, i) => {
-          const att = meta(ex.attacker);
-          const tgt = meta(ex.target);
-          const visible = i < visibleCount;
-          return (
-            <div key={ex.id} className={`ex-card${visible ? " visible" : ""}`}>
-              <div className="ex-node" style={{ background: att.color, borderColor: "#F4F5F8" }}>{i + 1}</div>
-              <div className="ex-bubble" style={{ background: att.bg, borderLeftColor: att.color }}>
-                <div className="ex-bub-hdr">
-                  <span className="ex-att-name" style={{ color: att.color }}>{att.name}</span>
-                  <span className="ex-att-jur" style={{ color: att.color }}>{att.jur}</span>
-                  <span className="ex-type-badge" style={{ background: ex.typeBg, color: ex.typeColor }}>{ex.type}</span>
+      {/* Report header */}
+      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,.03)" }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 6 }}>Panel Analysis Report</div>
+        <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", lineHeight: 1.4, marginBottom: 16 }}>{result.question ?? "Compliance Analysis"}</div>
+
+        {/* Agent status bar */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 8 }}>
+          {["A1","A2","A3","A4","A5"].map((id) => {
+            const m = meta(id);
+            const st = STATUS_STYLE[result.agents?.[id]?.status ?? "UPHELD"] ?? STATUS_STYLE.UPHELD;
+            return (
+              <div key={id} onClick={() => { onTabChange("ruling"); onSelectAgent(id); }}
+                style={{ borderRadius: 8, padding: "9px 10px", background: m.bg, border: `1px solid ${m.color}25`, cursor: "pointer",
+                  boxShadow: selectedAgent === id ? `0 0 0 2px ${m.color}` : "none" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: m.color, flexShrink: 0 }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: m.color }}>{m.name}</span>
                 </div>
-                <div className="ex-target">↳ submits against <strong style={{ color: tgt.color }}>{tgt.name}</strong> ({ex.id})</div>
-                <div className="ex-quote">{ex.quote}</div>
+                <div style={{ fontSize: 9, color: m.color, opacity: .65, margin: "1px 0 5px 11px" }}>{m.jur}</div>
+                <div style={{ fontSize: 8, fontWeight: 800, letterSpacing: ".5px", textTransform: "uppercase",
+                  padding: "2px 6px", borderRadius: 6, display: "inline-block", marginLeft: 11,
+                  color: st.fg, background: st.bg }}>{result.agents?.[id]?.status ?? "UPHELD"}</div>
               </div>
-            </div>
-          );
-        })}
-        {!exchanges.length && (
-          <div style={{ display: "flex", gap: 4, padding: "8px 0" }}>
-            <div className="typing-dots"><span /><span /><span /></div>
-            <span style={{ fontSize: 12, color: "#9ca3af", marginLeft: 8 }}>Panel convening…</span>
-          </div>
-        )}
+            );
+          })}
+        </div>
       </div>
 
-      {/* 2. Panel Ruling */}
-      {showConclusion && result && (
+      {/* Tab bar */}
+      <div style={{ display: "flex", gap: 4, marginBottom: 16, background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: 4, boxShadow: "0 1px 3px rgba(0,0,0,.03)" }}>
+        {TABS.map((tab) => (
+          <button key={tab.id} onClick={() => onTabChange(tab.id)}
+            style={{ flex: 1, padding: "8px 0", border: "none", borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all .15s",
+              background: activeTab === tab.id ? "#1a1a2e" : "transparent",
+              color: activeTab === tab.id ? "#fff" : "#6b7280" }}>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* TAB: Panel Ruling */}
+      {activeTab === "ruling" && (
         <>
-          <div className="analysis-section-lbl" style={{ marginTop: 22 }}>Panel Ruling</div>
-          <div className="verdict-box">
-            <div className="verdict-lbl">✓ Recommended Implementation</div>
-            <div className="verdict-txt">{result.decision?.recommendation}</div>
+          {/* Verdict */}
+          <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 12, padding: "18px 20px", marginBottom: 16 }}>
+            <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#16a34a", marginBottom: 8 }}>✓ Recommended Implementation</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#15803d", lineHeight: 1.65 }}>{result.decision?.recommendation}</div>
           </div>
-          <div className="jur-grid">
+
+          {/* Jurisdiction grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 16 }}>
             {(result.decision?.jurisdictions ?? []).map((j: AnyObj) => (
-              <div key={j.name} className="jur-card">
-                <div className="jur-flag">{j.flag}</div>
-                <div className="jur-name">{j.name}</div>
-                <div className="jur-rule">{j.rule}</div>
+              <div key={j.name} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "16px", boxShadow: "0 1px 3px rgba(0,0,0,.03)" }}>
+                <div style={{ fontSize: 22, marginBottom: 6 }}>{j.flag}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e", marginBottom: 5 }}>{j.name}</div>
+                <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.55 }}>{j.rule}</div>
               </div>
             ))}
           </div>
+
+          {/* Selected agent brief */}
+          {selectedAgent && (
+            <AgentBrief agentId={selectedAgent} agents={result.agents ?? {}} agentMeta={agentMeta}
+              agentExchangeMap={result.agentExchangeMap ?? {}} />
+          )}
+          {!selectedAgent && (
+            <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "32px", textAlign: "center", color: "#9ca3af", fontSize: 13 }}>
+              Click an agent card above to read their full legal brief
+            </div>
+          )}
         </>
       )}
 
-      {/* 3. Strategy */}
-      {showStrategy && result && (
-        <>
-          <div className="analysis-section-lbl" style={{ marginTop: 22 }}>Nash Equilibrium — Strategic Options</div>
-          <div className="strategy-row">
-            {(result.strategies ?? []).map((s: AnyObj) => (
-              <div key={s.name} className="strat-box" style={{ borderColor: s.donutBg ?? "#e5e7eb", background: s.donutBg ? `${s.donutBg}80` : "#f9fafb" }}>
-                {s.optimal && <div className="strat-eq">EQUILIBRIUM</div>}
-                <div className="strat-score" style={{ color: s.donutColor }}>{s.score}</div>
-                <div className="strat-bar" style={{ background: s.statusBg }}>
-                  <div style={{ width: `${s.score}%`, height: "100%", background: s.donutColor, borderRadius: 2 }} />
-                </div>
-                <div className="strat-name">{s.name}</div>
-                <div className="strat-pill" style={{ background: s.statusBg, color: s.statusColor }}>{s.status}</div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* 4. Next Steps */}
-      {showSteps && result && (
-        <>
-          <div className="analysis-section-lbl" style={{ marginTop: 22 }}>
-            Recommended Next Steps <span style={{ fontSize: 10, color: "#9ca3af", fontWeight: 500, letterSpacing: 0 }}>· click to expand</span>
-          </div>
-          <div className="steps-list">
-            {(result.nextSteps ?? []).map((s: AnyObj, i: number) => (
-              <div key={i} className="step-item" onClick={() => toggleStep(i)}>
-                <div className="step-hdr">
-                  <div className="step-num-badge" style={{ background: s.color }}>{i + 1}</div>
-                  <div className="step-info">
-                    <div className="step-title-row">
-                      <span className="step-phase">{s.phase}</span>
-                      <span className="step-title">{s.title}</span>
+      {/* TAB: Debate Record */}
+      {activeTab === "exchange" && (
+        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 4px rgba(0,0,0,.03)" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", marginBottom: 2 }}>Adversarial Submissions Record</div>
+          <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 20 }}>Chronological log of objections raised between counsel</div>
+          <div className="debate-track">
+            {(result.exchanges ?? []).map((ex: AnyObj, i: number) => {
+              const att = meta(ex.attacker), tgt = meta(ex.target);
+              const visible = !debateVisible || i < visibleExchanges;
+              return (
+                <div key={ex.id} className={`ex-card${visible ? " visible" : ""}`}>
+                  <div className="ex-node" style={{ background: att.color, borderColor: "#fff" }}>{i + 1}</div>
+                  <div className="ex-bubble" style={{ background: att.bg, borderLeftColor: att.color }}>
+                    <div className="ex-bub-hdr">
+                      <span className="ex-att-name" style={{ color: att.color }}>{att.name}</span>
+                      <span className="ex-att-jur" style={{ color: att.color }}>{att.jur}</span>
+                      <span className="ex-type-badge" style={{ background: ex.typeBg, color: ex.typeColor }}>{ex.type}</span>
                     </div>
-                    <div className="step-time">{s.timeline} · {s.actions}</div>
+                    <div className="ex-target">↳ submits against <strong style={{ color: tgt.color }}>{tgt.name}</strong> ({ex.id})</div>
+                    <div className="ex-quote">{ex.quote}</div>
+                    {/* Outcome */}
+                    <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(0,0,0,.06)", display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{
+                        fontSize: 9, fontWeight: 800, letterSpacing: ".5px", textTransform: "uppercase", padding: "2px 8px", borderRadius: 6,
+                        color: ex.outcomeType === "sustained" ? "#dc2626" : "#16a34a",
+                        background: ex.outcomeType === "sustained" ? "#FEF2F2" : "#F0FDF4",
+                      }}>{ex.outcome}</span>
+                      <span style={{ fontSize: 11, color: "#6b7280" }}>{ex.outcomeDetail}</span>
+                    </div>
                   </div>
-                  <span className={`step-chev${openSteps.has(i) ? " open" : ""}`}>▾</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* TAB: Strategy */}
+      {activeTab === "strategy" && (
+        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 4px rgba(0,0,0,.03)" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", marginBottom: 2 }}>Nash Equilibrium Analysis</div>
+          <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 20 }}>Score = (Legal Validity × Probability) + Business Value − Regulatory Risk − Engineering Cost</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
+            {(result.strategies ?? []).map((s: AnyObj) => {
+              const R = 34, C = 2 * Math.PI * R;
+              const offset = C * (1 - s.score / 100);
+              return (
+                <div key={s.name} style={{ textAlign: "center", position: "relative" }}>
+                  {s.optimal && (
+                    <span style={{ position: "absolute", top: -4, right: 0, fontSize: 8, fontWeight: 800,
+                      background: "#F0FDFA", color: "#0d9488", border: "1px solid #CCFBF1",
+                      padding: "2px 7px", borderRadius: 8, letterSpacing: ".5px" }}>EQUILIBRIUM</span>
+                  )}
+                  <div style={{ position: "relative", width: 90, height: 90, margin: "0 auto 14px" }}>
+                    <svg width="90" height="90" viewBox="0 0 90 90">
+                      <circle cx="45" cy="45" r={R} fill="none" stroke={s.donutBg} strokeWidth="8" />
+                      <circle cx="45" cy="45" r={R} fill="none" stroke={s.donutColor} strokeWidth="8"
+                        strokeDasharray={C} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 45 45)" />
+                    </svg>
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 21, fontWeight: 800, color: "#1a1a2e" }}>{s.score}</div>
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e", marginBottom: 5 }}>{s.name}</div>
+                  <span style={{ fontSize: 9, fontWeight: 800, padding: "2px 10px", borderRadius: 10, display: "inline-block", marginBottom: 8, background: s.statusBg, color: s.statusColor }}>{s.status}</span>
+                  <p style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>{s.note}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* TAB: Roadmap */}
+      {activeTab === "steps" && (
+        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 4px rgba(0,0,0,.03)" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", marginBottom: 2 }}>Implementation Roadmap</div>
+          <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 16 }}>Sequenced actions from panel ruling · click a step to expand</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {(result.nextSteps ?? []).map((s: AnyObj, i: number) => (
+              <div key={i} style={{ border: "1px solid #e5e7eb", borderRadius: 10, overflow: "hidden", borderTop: `4px solid ${s.color}`, cursor: "pointer" }}
+                onClick={() => onToggleStep(i)}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", background: "#f9fafb" }}>
+                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: s.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".5px" }}>{s.phase}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>{s.title}</span>
+                      <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: "auto" }}>{s.timeline}</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#6b7280" }}>{s.actions}</div>
+                  </div>
+                  <span style={{ color: "#9ca3af", fontSize: 12, transition: "transform .2s", transform: openSteps.has(i) ? "rotate(180deg)" : "none" }}>▾</span>
                 </div>
                 {openSteps.has(i) && (
-                  <div className="step-body open">
-                    <ul className="step-checklist">
-                      {(s.checklist ?? []).map((item: string, j: number) => <li key={j}>{item}</li>)}
+                  <div style={{ padding: "14px 16px", borderTop: "1px solid #f3f4f6", background: "#fff" }}>
+                    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 7, marginBottom: 12 }}>
+                      {(s.checklist ?? []).map((item: string, j: number) => (
+                        <li key={j} style={{ display: "flex", gap: 8, fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
+                          <span style={{ color: "#9ca3af", fontWeight: 700, flexShrink: 0, marginTop: 1 }}>→</span>{item}
+                        </li>
+                      ))}
                     </ul>
-                    <div className="step-owners">
-                      {(s.owners ?? []).map((o: string, j: number) => <span key={j} className="step-owner-chip">{o}</span>)}
+                    <div style={{ paddingTop: 10, borderTop: "1px solid #f3f4f6" }}>
+                      <div style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", color: "#9ca3af", marginBottom: 6 }}>Owners</div>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        {(s.owners ?? []).map((o: string, j: number) => (
+                          <span key={j} style={{ fontSize: 10, fontWeight: 600, background: "#f3f4f6", color: "#374151", padding: "3px 10px", borderRadius: 10 }}>{o}</span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
             ))}
           </div>
-        </>
-      )}
-
-      {/* 5. Argument Map (collapsible) */}
-      {showGraph && result && (
-        <details className="graph-details">
-          <summary>⚖️ Argument map &amp; legal briefs — click any node to read the full brief</summary>
-          <div className="graph-inner">
-            <div>
-              <ArgumentMapSVG exchanges={result.exchanges ?? []} agentMeta={result.agentMeta ?? agentMeta} selectedAgent={selectedAgent} onSelect={setSelectedAgent} />
-            </div>
-            <BriefPanelInline agentId={selectedAgent} agents={result.agents ?? {}} agentMeta={result.agentMeta ?? agentMeta} />
-          </div>
-        </details>
+        </div>
       )}
     </div>
   );
 }
 
-// ── Argument map SVG ──────────────────────────────────────────────────────────
+// ── Agent Brief ────────────────────────────────────────────────────────────────
 
-const NODE_POS: AnyObj = {
-  A1: { cx: 155, cy: 155 },
-  A2: { cx: 370, cy: 65  },
-  A3: { cx: 560, cy: 185 },
-  A4: { cx: 470, cy: 295 },
-  A5: { cx: 210, cy: 295 },
-};
-
-function ArgumentMapSVG({ exchanges, agentMeta, selectedAgent, onSelect }: { exchanges: AnyObj[]; agentMeta: AnyObj; selectedAgent: string | null; onSelect: (id: string) => void }) {
-  const LABEL: AnyObj = { A1: "Engineer", A2: "EU Reg.", A3: "US Counsel", A4: "Product", A5: "Business" };
-
-  const edgeColor = (type: string) =>
-    type === "Direct Contention" ? "#E53935" : type === "Legal Authority Challenge" ? "#F57C00" : "#FFA000";
-  const edgeDash = (type: string) =>
-    type === "Direct Contention" ? undefined : type === "Legal Authority Challenge" ? "5,3" : "3,3";
-
-  return (
-    <>
-      <svg className="g-svg" viewBox="0 0 700 345" style={{ overflow: "visible" }}>
-        <defs>
-          {["#E53935","#F57C00","#FFA000"].map((c, i) => (
-            <marker key={i} id={`m${i}`} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L8,3 z" fill={c} />
-            </marker>
-          ))}
-        </defs>
-        {exchanges.map((ex, i) => {
-          const from = NODE_POS[ex.attacker], to = NODE_POS[ex.target];
-          if (!from || !to) return null;
-          const mx = (from.cx + to.cx) / 2 + (i % 2 === 0 ? -40 : 40);
-          const my = (from.cy + to.cy) / 2 + (i % 2 === 0 ? -30 : 20);
-          const color = edgeColor(ex.type);
-          const markerIdx = color === "#E53935" ? 0 : color === "#F57C00" ? 1 : 2;
-          return (
-            <path key={ex.id}
-              d={`M ${from.cx},${from.cy} Q ${mx},${my} ${to.cx},${to.cy}`}
-              stroke={color} strokeWidth="1.8" fill="none"
-              strokeDasharray={edgeDash(ex.type)}
-              markerEnd={`url(#m${markerIdx})`} opacity=".85"
-            />
-          );
-        })}
-        {Object.entries(NODE_POS).map(([id, pos]) => {
-          const m = agentMeta[id]; if (!m) return null;
-          const p = pos as { cx: number; cy: number };
-          return (
-            <g key={id} onClick={() => onSelect(id)} style={{ cursor: "pointer" }}>
-              <circle cx={p.cx} cy={p.cy} r="36" fill={m.bg} stroke={m.color} strokeWidth={selectedAgent === id ? 4 : 2} />
-              <text x={p.cx} y={p.cy - 5} textAnchor="middle" fontSize="11" fontWeight="800" fill={m.color} fontFamily="Inter,system-ui">{id}</text>
-              <text x={p.cx} y={p.cy + 9} textAnchor="middle" fontSize="9" fill="#374151" fontFamily="Inter,system-ui">{LABEL[id]}</text>
-            </g>
-          );
-        })}
-      </svg>
-      <div className="g-legend">
-        <div className="g-leg"><div style={{ width: 20, height: 2, background: "#E53935" }} />Direct Contention</div>
-        <div className="g-leg"><div style={{ width: 20, borderTop: "2px dashed #F57C00" }} />Legal Authority Challenge</div>
-        <div className="g-leg"><div style={{ width: 20, borderTop: "2px dotted #FFA000" }} />Factual Dispute</div>
-      </div>
-    </>
-  );
-}
-
-// ── Brief panel inline ─────────────────────────────────────────────────────────
-
-function BriefPanelInline({ agentId, agents, agentMeta }: { agentId: string | null; agents: AnyObj; agentMeta: AnyObj }) {
-  if (!agentId) return <div className="brief-card"><div className="brief-empty">Select a node to read the legal brief</div></div>;
-
+function AgentBrief({ agentId, agents, agentMeta, agentExchangeMap }: { agentId: string; agents: AnyObj; agentMeta: AnyObj; agentExchangeMap: AnyObj }) {
   const a = agentMeta[agentId] ?? { name: agentId, color: "#6b7280", bg: "#f9fafb", jur: "" };
   const b = agents[agentId] ?? {};
   const r = b.status ?? "UPHELD";
   const s = STATUS_STYLE[r] ?? { fg: "#6b7280", bg: "#f9fafb", bd: "#e5e7eb" };
+  const exMap = agentExchangeMap[agentId] ?? { objections: [], challenges: [] };
 
   return (
-    <div className="brief-card">
-      <div className="bs-agent" style={{ color: a.color }}>
-        <div className="bs-agent-dot" style={{ background: a.color }} />{a.name}
+    <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 4px rgba(0,0,0,.03)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: a.color }} />
+        <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".5px", textTransform: "uppercase", color: a.color }}>{a.name}</span>
+        <span style={{ fontSize: 10, color: "#9ca3af" }}>{a.jur}</span>
+        <span style={{ marginLeft: "auto", fontSize: 9, fontWeight: 800, padding: "2px 8px", borderRadius: 8, color: s.fg, background: s.bg, border: `1px solid ${s.bd}` }}>{r}</span>
       </div>
-      <div className="bs-jur">{a.jur} · Confidence: {b.confidence ?? "—"}%</div>
-      <div className="bs-status" style={{ color: s.fg, background: s.bg, border: `1px solid ${s.bd}` }}>{r}</div>
-      {[
-        ["Submission", b.submission, "bold"],
-        ["Factual Basis", b.factualBasis, "italic"],
-        ["Legal Authority", b.legalAuthority, ""],
-        ["Cited Authority", b.citedAuthority, "bold"],
-        ["Qualification", b.qualification, "italic"],
-      ].map(([lbl, txt, cls]) => txt ? (
-        <div key={lbl as string} className="bs-sec">
-          <div className="bs-lbl">{lbl}</div>
-          <div className={`bs-txt${cls ? ` ${cls}` : ""}`}>{txt}</div>
-        </div>
-      ) : null)}
-      {b.confidence != null && (
-        <div className="bs-sec">
-          <div className="bs-lbl">Confidence</div>
-          <div className="conf-row">
-            <div className="conf-bar"><div className="conf-fill" style={{ width: `${b.confidence}%`, background: a.color }} /></div>
-            <strong style={{ color: a.color, fontSize: 11 }}>{b.confidence}%</strong>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 14 }}>
+        {[
+          ["① Submission", b.submission, true, false],
+          ["② Factual Basis", b.factualBasis, false, true],
+          ["Legal Authority", b.legalAuthority, false, false],
+          ["Cited Authority", b.citedAuthority, true, false],
+        ].map(([lbl, txt, bold, italic]) => txt ? (
+          <div key={lbl as string}>
+            <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#9ca3af", marginBottom: 4 }}>{lbl}</div>
+            <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.6, fontWeight: bold ? 600 : 400, fontStyle: italic ? "italic" : "normal", color: bold ? "#1a1a2e" : "#374151" } as React.CSSProperties}>{txt}</div>
           </div>
+        ) : null)}
+      </div>
+
+      {b.qualification && (
+        <div style={{ marginTop: 12, padding: "10px 12px", background: "#f9fafb", borderRadius: 8, borderLeft: "3px solid #e5e7eb" }}>
+          <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#9ca3af", marginBottom: 3 }}>Qualification · Save Where</div>
+          <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.6, fontStyle: "italic" }}>{b.qualification}</div>
+        </div>
+      )}
+
+      {b.confidence != null && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+            <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#9ca3af" }}>Confidence</span>
+            <span style={{ fontSize: 11, fontWeight: 800, color: a.color }}>{b.confidence}%</span>
+          </div>
+          <div style={{ height: 4, background: "#e5e7eb", borderRadius: 2 }}>
+            <div style={{ width: `${b.confidence}%`, height: "100%", background: a.color, borderRadius: 2, transition: "width .6s ease" }} />
+          </div>
+        </div>
+      )}
+
+      {(exMap.objections?.length > 0 || exMap.challenges?.length > 0) && (
+        <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #f3f4f6" }}>
+          {exMap.objections?.map((o: AnyObj) => (
+            <div key={o.id} style={{ borderLeft: `3px solid ${o.color}`, background: `${o.color}0d`, borderRadius: 6, padding: 9, marginBottom: 7 }}>
+              <div style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: ".5px", color: o.color, marginBottom: 2 }}>{o.type} · {o.id} from {agentMeta[o.from]?.name ?? o.from}</div>
+              <div style={{ fontSize: 11, color: "#4b5563", lineHeight: 1.5, fontStyle: "italic" }}>"{o.summary}"</div>
+            </div>
+          ))}
+          {exMap.challenges?.map((c: AnyObj) => (
+            <div key={c.id} style={{ borderLeft: `3px solid ${c.color}`, background: `${c.color}0d`, borderRadius: 6, padding: 9, marginBottom: 7 }}>
+              <div style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: ".5px", color: c.color, marginBottom: 2 }}>{c.type} · {c.id} → {agentMeta[c.to]?.name ?? c.to}</div>
+              <div style={{ fontSize: 11, color: "#4b5563", lineHeight: 1.5, fontStyle: "italic" }}>"{c.summary}"</div>
+            </div>
+          ))}
         </div>
       )}
     </div>
