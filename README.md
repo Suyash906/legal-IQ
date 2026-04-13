@@ -2,6 +2,18 @@
 
 LegalIQ is an adversarial legal reasoning engine that simulates a panel of five AI counsel agents debating a compliance question, grounded in a Neo4j legal knowledge graph. It produces structured outputs: exchange transcripts, argument maps, strategy matrices, panel rulings, and implementation roadmaps.
 
+## Screenshots
+
+| Chat Interface | Document Upload |
+|---|---|
+| ![Greeting screen with scenario chips](docs/screenshots/1.png) | ![Question input and document upload flow](docs/screenshots/2.png) |
+
+| Compliance Analysis Report | Neo4j Knowledge Graph |
+|---|---|
+| ![Panel ruling with jurisdiction cards and debate record](docs/screenshots/3.png) | ![Neo4j Aura graph browser showing nodes and relationships](docs/screenshots/4.png) |
+
+---
+
 ## How It Works
 
 ```
